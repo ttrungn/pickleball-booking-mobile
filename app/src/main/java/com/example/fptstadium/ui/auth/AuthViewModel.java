@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.fptstadium.data.model.response.LoginResponse;
+import com.example.fptstadium.data.model.response.RegisterResponse;
 import com.example.fptstadium.data.repository.AuthRepository;
 
 import javax.inject.Inject;
@@ -22,5 +23,10 @@ public class AuthViewModel extends ViewModel {
 
     public LiveData<LoginResponse> login(String username, String password) {
         return authRepository.login(username, password);
+    }
+
+    public LiveData<RegisterResponse> register(String email, String password, String confirmPassword,
+                                                String firstName, String lastName, String phoneNumber) {
+        return authRepository.register(email, password, confirmPassword, firstName, lastName, phoneNumber);
     }
 }
