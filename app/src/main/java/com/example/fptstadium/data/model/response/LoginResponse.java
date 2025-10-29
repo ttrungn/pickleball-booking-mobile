@@ -3,32 +3,54 @@ package com.example.fptstadium.data.model.response;
 import com.google.gson.annotations.SerializedName;
 
 public class LoginResponse {
-    private int code;
-    private String status;
-    private String message;
-    private String traceId;
     @SerializedName("data")
     private LoginData data;
 
+    @SerializedName("success")
+    private boolean success;
 
-    public int getCode() { return code; }
-    public String getStatus() { return status; }
-    public String getMessage() { return message; }
-    public String getTraceId() { return traceId; }
+    @SerializedName("message")
+    private String message;
+
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
     public LoginData getData() {
         return data;
     }
 
     public static class LoginData {
-        @SerializedName("isPremium")
+        @SerializedName("accessToken")
+        private String accessToken;
 
-        private boolean isPremium;
+        @SerializedName("refreshToken")
+        private String refreshToken;
 
-        @SerializedName("token")
-        private String token;
+        @SerializedName("accessTokenExpiresAt")
+        private long accessTokenExpiresAt;
 
-        public String getToken () {
-            return token;
+        @SerializedName("refreshTokenExpiresAt")
+        private long refreshTokenExpiresAt;
+
+        public String getAccessToken() {
+            return accessToken;
+        }
+
+        public String getRefreshToken() {
+            return refreshToken;
+        }
+
+        public long getAccessTokenExpiresAt() {
+            return accessTokenExpiresAt;
+        }
+
+        public long getRefreshTokenExpiresAt() {
+            return refreshTokenExpiresAt;
         }
     }
 }

@@ -79,7 +79,7 @@ public class LoginActivity extends AppCompatActivity {
             viewModel.login(email, password).observe(this, loginResponse -> {
                 btnSignIn.setEnabled(true);
 
-                if (loginResponse.getCode() == 200) {
+                if (loginResponse != null && loginResponse.isSuccess()) {
                     Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(this, MainActivity.class));
                     finish();

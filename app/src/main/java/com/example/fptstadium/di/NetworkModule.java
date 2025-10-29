@@ -26,7 +26,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class NetworkModule {
 
     //TODO: Thay đổi base url khi run app
-    private static final String BASE_URL = "";
+    // For emulator: 10.0.2.2 maps to host machine's localhost
+    // For physical device: use your machine's actual IP address (e.g., http://192.168.1.100:8080/api/v1/)
+    private static final String BASE_URL = "http://10.0.2.2:8080/api/v1/";
 
 
     @Provides
