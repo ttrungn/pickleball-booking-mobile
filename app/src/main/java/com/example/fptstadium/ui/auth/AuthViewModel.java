@@ -3,6 +3,7 @@ package com.example.fptstadium.ui.auth;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.fptstadium.data.model.response.GetProfileResponse;
 import com.example.fptstadium.data.model.response.LoginResponse;
 import com.example.fptstadium.data.model.response.RegisterResponse;
 import com.example.fptstadium.data.repository.AuthRepository;
@@ -28,5 +29,9 @@ public class AuthViewModel extends ViewModel {
     public LiveData<RegisterResponse> register(String email, String password, String confirmPassword,
                                                 String firstName, String lastName, String phoneNumber) {
         return authRepository.register(email, password, confirmPassword, firstName, lastName, phoneNumber);
+    }
+
+    public LiveData<GetProfileResponse> getUserProfile() {
+        return authRepository.getProfile();
     }
 }

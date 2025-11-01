@@ -43,13 +43,14 @@ public class NetworkModule {
                     Request original = chain.request();
                     Request.Builder builder = original.newBuilder();
 
-                    String token = preferHelpers.getToken();
+                    // Use getAccessToken() instead of getToken()
+                    String token = preferHelpers.getAccessToken();
                     if (token != null && !token.isEmpty()) {
                         builder.header("Authorization", "Bearer " + token);
                     }
 
-
-                    return chain.proceed(chain.request());
+                    Request request = builder.build();
+                    return chain.proceed(request);
                 })
                 .connectTimeout(30, TimeUnit.SECONDS)
                 .readTimeout(30, TimeUnit.SECONDS)
