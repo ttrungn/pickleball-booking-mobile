@@ -4,6 +4,7 @@ package com.example.fptstadium.di;
 import android.content.Context;
 
 import com.example.fptstadium.api.AuthService;
+import com.example.fptstadium.api.FieldService;
 import com.example.fptstadium.utils.PrefsHelper;
 
 import java.util.concurrent.TimeUnit;
@@ -49,8 +50,8 @@ public class NetworkModule {
                         builder.header("Authorization", "Bearer " + token);
                     }
 
-                    Request request = builder.build();
-                    return chain.proceed(request);
+                    Request newRequest = builder.build();
+                    return chain.proceed(newRequest);
                 })
                 .connectTimeout(30, TimeUnit.SECONDS)
                 .readTimeout(30, TimeUnit.SECONDS)
@@ -68,5 +69,9 @@ public class NetworkModule {
                 .build();
     }
 
-
+    @Provides
+    @Singleton
+    public FieldService provideFieldService(Retrofit retrofit) {
+        return retrofit.create(FieldService.class);
+    }
 }
