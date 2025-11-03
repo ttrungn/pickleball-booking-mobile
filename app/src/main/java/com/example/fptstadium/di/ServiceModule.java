@@ -34,7 +34,7 @@ public class ServiceModule {
     @Singleton
     public TimeSlotService provideTimeSlotService(Retrofit retrofit) {
         return retrofit.create(TimeSlotService.class);
-      
+    }
     @Provides
     @Singleton
     public PaymentService providePaymentService(Retrofit retrofit) {
