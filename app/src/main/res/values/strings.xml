@@ -1,4 +1,7 @@
+
 <resources>
+    <string name="payment_success_title">Payment Successful</string>
+    <string name="payment_failed_title">Payment Failed</string>
     <string name="app_name">FPTStadium</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>

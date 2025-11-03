@@ -2,6 +2,7 @@ package com.example.fptstadium.di;
 
 
 import com.example.fptstadium.api.AuthService;
+import com.example.fptstadium.api.PaymentService;
 
 import javax.inject.Singleton;
 
@@ -19,5 +20,11 @@ public class ServiceModule {
     @Singleton
     public AuthService provideAuthService(Retrofit retrofit) {
         return retrofit.create(AuthService.class);
+    }
+
+    @Provides
+    @Singleton
+    public PaymentService providePaymentService(Retrofit retrofit) {
+        return retrofit.create(PaymentService.class);
     }
 }

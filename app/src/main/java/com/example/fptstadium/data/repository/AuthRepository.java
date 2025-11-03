@@ -6,8 +6,11 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.fptstadium.api.AuthService;
 import com.example.fptstadium.data.model.request.LoginRequest;
 import com.example.fptstadium.data.model.request.RegisterRequest;
+import com.example.fptstadium.data.model.request.UpdateProfileRequest;
+import com.example.fptstadium.data.model.response.GetProfileResponse;
 import com.example.fptstadium.data.model.response.LoginResponse;
 import com.example.fptstadium.data.model.response.RegisterResponse;
+import com.example.fptstadium.data.model.response.UpdateProfileResponse;
 import com.example.fptstadium.utils.PrefsHelper;
 
 import javax.inject.Inject;
@@ -88,5 +91,51 @@ public class AuthRepository {
                     }
                 });
         return registerResult;
+    }
+
+    public LiveData<GetProfileResponse> getProfile() {
+        MutableLiveData<GetProfileResponse> profileResult = new MutableLiveData<>();
+
+        authService.getProfile()
+                .enqueue(new retrofit2.Callback<GetProfileResponse>() {
+                    @Override
+                    public void onResponse(retrofit2.Call<GetProfileResponse> call, retrofit2.Response<GetProfileResponse> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            GetProfileResponse profileResponse = response.body();
+                            profileResult.setValue(profileResponse);
+                        } else {
+                            profileResult.setValue(null);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(retrofit2.Call<GetProfileResponse> call, Throwable t) {
+                        profileResult.setValue(null);
+                    }
+                });
+        return profileResult;
+    }
+
+    public LiveData<UpdateProfileResponse> updateProfile(String firstName, String lastName, String phoneNumber) {
+        MutableLiveData<UpdateProfileResponse> updateResult = new MutableLiveData<>();
+
+        authService.updateProfile(new UpdateProfileRequest(firstName, lastName, phoneNumber))
+                .enqueue(new retrofit2.Callback<UpdateProfileResponse>() {
+                    @Override
+                    public void onResponse(retrofit2.Call<UpdateProfileResponse> call, retrofit2.Response<UpdateProfileResponse> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            UpdateProfileResponse updateResponse = response.body();
+                            updateResult.setValue(updateResponse);
+                        } else {
+                            updateResult.setValue(null);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(retrofit2.Call<UpdateProfileResponse> call, Throwable t) {
+                        updateResult.setValue(null);
+                    }
+                });
+        return updateResult;
     }
 }
