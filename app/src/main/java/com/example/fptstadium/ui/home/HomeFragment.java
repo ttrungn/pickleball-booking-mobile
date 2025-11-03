@@ -1,5 +1,6 @@
 package com.example.fptstadium.ui.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -19,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.fptstadium.databinding.FragmentHomeBinding;
 import com.example.fptstadium.ui.adapter.FieldAdapter;
+import com.example.fptstadium.ui.pricing.FieldPricingActivity;
 
 import java.util.ArrayList;
 
@@ -79,8 +81,19 @@ public class HomeFragment extends Fragment {
         binding.recyclerView.setLayoutManager(layoutManager);
         binding.recyclerView.setHasFixedSize(true);
 
-        // Initialize adapter with empty list
+        // Initialize adapter with empty list first
         adapter = new FieldAdapter(new ArrayList<>());
+
+        // Set click listener to open pricing activity
+        adapter.setOnFieldClickListener(field -> {
+            Log.d(TAG, "Field clicked: " + field.getName());
+            Intent intent = new Intent(getContext(), FieldPricingActivity.class);
+            intent.putExtra(FieldPricingActivity.EXTRA_FIELD_ID, field.getId());
+            intent.putExtra(FieldPricingActivity.EXTRA_FIELD_NAME, field.getName());
+            intent.putExtra(FieldPricingActivity.EXTRA_FIELD_ADDRESS, field.getAddress());
+            startActivity(intent);
+        });
+
         binding.recyclerView.setAdapter(adapter);
 
         // Set initial visibility
