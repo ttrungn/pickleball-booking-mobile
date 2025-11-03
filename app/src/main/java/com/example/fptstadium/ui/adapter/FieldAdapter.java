@@ -1,5 +1,6 @@
 package com.example.fptstadium.ui.adapter;
 
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.fptstadium.R;
 import com.example.fptstadium.data.model.response.GetFieldsResponse;
+import com.example.fptstadium.ui.field.FieldDetailActivity;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.List;
@@ -72,11 +74,11 @@ public class FieldAdapter extends RecyclerView.Adapter<FieldAdapter.FieldViewHol
         Log.d(TAG, "Loading image for field " + field.getName() + ", URL: " + imageUrl);
 
         if (imageUrl != null && !imageUrl.isEmpty()) {
-            // Load and cache the image
+            // Load and cache the image with primaryColor placeholder
             Glide.with(holder.itemView.getContext())
                     .load(imageUrl)
-                    .placeholder(R.drawable.ic_launcher_background)
-                    .error(R.drawable.ic_launcher_background)
+                    .placeholder(R.color.primaryColor)
+                    .error(R.color.primaryColor)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .centerCrop()
                     .into(holder.stadiumImage);
@@ -88,13 +90,28 @@ public class FieldAdapter extends RecyclerView.Adapter<FieldAdapter.FieldViewHol
             }
         });
         } else {
-            holder.stadiumImage.setImageResource(R.drawable.ic_launcher_background);
+            // Set primaryColor background when no image
+            holder.stadiumImage.setBackgroundResource(R.color.primaryColor);
         }
 
         // Setup book button click listener
         holder.bookButton.setOnClickListener(v -> {
             String bookingMessage = "Đang đặt sân " + field.getName();
             Toast.makeText(v.getContext(), bookingMessage, Toast.LENGTH_SHORT).show();
+        });
+
+        // Setup item click to open detail
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(v.getContext(), FieldDetailActivity.class);
+            intent.putExtra(FieldDetailActivity.EXTRA_FIELD_ID, field.getId());
+            v.getContext().startActivity(intent);
+        });
+
+        // Setup image click to open detail
+        holder.stadiumImage.setOnClickListener(v -> {
+            Intent intent = new Intent(v.getContext(), FieldDetailActivity.class);
+            intent.putExtra(FieldDetailActivity.EXTRA_FIELD_ID, field.getId());
+            v.getContext().startActivity(intent);
         });
     }
 

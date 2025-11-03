@@ -27,6 +27,11 @@
             android:exported="false"
             android:parentActivityName=".MainActivity" />
         <activity
+            android:name=".ui.field.FieldDetailActivity"
+            android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"
+            android:exported="false"
+            android:parentActivityName=".MainActivity" />
+        <activity
             android:name=".ui.auth.LoginActivity"
             android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"
             android:exported="true">
