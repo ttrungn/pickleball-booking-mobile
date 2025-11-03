@@ -7,7 +7,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 
 public interface PricingService {
-    @GET("field/{fieldId}")
+    @GET("pricings/field/{fieldId}")
     Call<GetPricingsResponse> getPricingsByField(@Path("fieldId") String fieldId);
 }
 

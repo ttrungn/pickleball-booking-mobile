@@ -4,7 +4,6 @@ import com.example.fptstadium.data.model.TimeSlot;
 import com.google.gson.annotations.SerializedName;
 
 public class GetTimeSlotResponse {
-
     @SerializedName("data")
     private TimeSlot data;
 
