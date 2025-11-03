@@ -2,6 +2,7 @@ package com.example.fptstadium.ui.profile;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.net.Uri;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,8 +35,9 @@ public class UserProfileFragment extends Fragment {
     PrefsHelper prefsHelper;
 
     private TextView tvUserName, tvUserEmail;
-    private LinearLayout llChangeProfile, llChangePassword, llAboutUs, llLogout;
+    private LinearLayout llChangeProfile, llChangePassword, llAboutUs, llLogout, llTestPayment;
     private AuthViewModel authViewModel;
+    private PaymentViewModel paymentViewModel;
     private UserProfileData currentUserData;
 
     @Override
@@ -60,10 +62,12 @@ public class UserProfileFragment extends Fragment {
         llChangePassword = view.findViewById(R.id.llChangePassword);
         llAboutUs = view.findViewById(R.id.llAboutUs);
         llLogout = view.findViewById(R.id.llLogout);
+        llTestPayment = view.findViewById(R.id.llTestPayment);
     }
 
     private void initViewModel() {
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
+        paymentViewModel = new ViewModelProvider(this).get(PaymentViewModel.class);
     }
 
     private void setupListeners() {
@@ -90,6 +94,42 @@ public class UserProfileFragment extends Fragment {
         llLogout.setOnClickListener(v -> {
             logout();
         });
+
+        if (llTestPayment != null) {
+            llTestPayment.setOnClickListener(v -> {
+                String bookingId = java.util.UUID.randomUUID().toString();
+                paymentViewModel.getMomoPaymentUrl(bookingId).observe(getViewLifecycleOwner(), response -> {
+                    if (response != null && response.isSuccess() && response.getData() != null) {
+                        String deeplink = response.getData().getDeeplink();
+                        String payUrl = response.getData().getPayUrl();
+
+                        // Try opening MoMo app via deeplink first
+                        if (deeplink != null && !deeplink.isEmpty()) {
+                            try {
+                                Intent momoIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(deeplink));
+                                startActivity(momoIntent);
+                            } catch (Exception ignored) {
+                                // Fall through to payUrl/web fallback
+                            }
+                        }
+
+                        // Fallback to opening payUrl in browser if deeplink/app not available
+//                        if (payUrl != null && !payUrl.isEmpty()) {
+//                            try {
+//                                Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(payUrl));
+//                                startActivity(webIntent);
+//                            } catch (Exception e) {
+//                                Toast.makeText(getContext(), "Unable to open payment link", Toast.LENGTH_SHORT).show();
+//                            }
+//                        } else {
+//                            Toast.makeText(getContext(), "No payment link available", Toast.LENGTH_SHORT).show();
+//                        }
+                    } else {
+                        Toast.makeText(getContext(), "Failed to create Momo payment", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            });
+        }
     }
 
     private void loadUserInfo() {

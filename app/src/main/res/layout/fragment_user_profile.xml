@@ -205,6 +205,44 @@
 
             </LinearLayout>
 
+            <!-- Test Momo Payment Section -->
+            <LinearLayout
+                android:id="@+id/llTestPayment"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:background="?attr/selectableItemBackground">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_payment"
+                    android:contentDescription="Payment Icon"
+                    android:scaleType="centerInside"
+                    app:tint="@color/primaryColor" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Test Momo Payment"
+                    android:textSize="16sp"
+                    android:textColor="#333333"
+                    android:layout_marginStart="16dp"/>
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_arrow_right"
+                    android:contentDescription="Arrow"
+                    android:scaleType="centerInside"
+                    app:tint="@color/secondaryColor" />
+
+            </LinearLayout>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="8dp"
