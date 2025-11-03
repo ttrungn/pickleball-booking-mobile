@@ -226,6 +226,19 @@
                 app:icon="@android:drawable/ic_dialog_map"
                 app:iconTint="#4CAF50" />
 
+            <!-- View Pricing Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/view_pricing_button"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Xem bảng giá"
+                android:textColor="#FF9800"
+                app:strokeColor="#FF9800"
+                app:icon="@android:drawable/ic_menu_info_details"
+                app:iconTint="#FF9800" />
+
             <!-- Book Button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/book_field_button"

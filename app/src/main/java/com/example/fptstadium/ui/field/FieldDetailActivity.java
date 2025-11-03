@@ -18,6 +18,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.fptstadium.R;
 import com.example.fptstadium.api.FieldService;
 import com.example.fptstadium.data.model.response.FieldDetailResponse;
+import com.example.fptstadium.ui.pricing.FieldPricingActivity;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.button.MaterialButton;
 
@@ -47,6 +48,7 @@ public class FieldDetailActivity extends AppCompatActivity {
     private TextView fieldDescription;
     private TextView fieldArea;
     private MaterialButton viewMapButton;
+    private MaterialButton viewPricingButton;
     private MaterialButton bookFieldButton;
     private ProgressBar progressBar;
     private CollapsingToolbarLayout collapsingToolbar;
@@ -85,6 +87,7 @@ public class FieldDetailActivity extends AppCompatActivity {
         fieldDescription = findViewById(R.id.field_description);
         fieldArea = findViewById(R.id.field_area);
         viewMapButton = findViewById(R.id.view_map_button);
+        viewPricingButton = findViewById(R.id.view_pricing_button);
         bookFieldButton = findViewById(R.id.book_field_button);
         progressBar = findViewById(R.id.progress_bar);
 
@@ -217,6 +220,9 @@ public class FieldDetailActivity extends AppCompatActivity {
         // Map button
         viewMapButton.setOnClickListener(v -> openMap(field));
 
+        // View Pricing button
+        viewPricingButton.setOnClickListener(v -> viewPricing(field));
+
         // Book button
         bookFieldButton.setOnClickListener(v -> bookField(field));
     }
@@ -249,6 +255,14 @@ public class FieldDetailActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "Không có thông tin bản đồ", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void viewPricing(FieldDetailResponse.FieldDetail field) {
+        Intent intent = new Intent(this, FieldPricingActivity.class);
+        intent.putExtra(FieldPricingActivity.EXTRA_FIELD_ID, field.getId());
+        intent.putExtra(FieldPricingActivity.EXTRA_FIELD_NAME, field.getName());
+        intent.putExtra(FieldPricingActivity.EXTRA_FIELD_ADDRESS, field.getAddress());
+        startActivity(intent);
     }
 
     private void bookField(FieldDetailResponse.FieldDetail field) {

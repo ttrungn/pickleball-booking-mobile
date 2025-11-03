@@ -25,10 +25,19 @@ public class FieldAdapter extends RecyclerView.Adapter<FieldAdapter.FieldViewHol
 
     private static final String TAG = "FieldAdapter";
     private List<GetFieldsResponse.FieldItem> fieldList;
+    private OnFieldClickListener onFieldClickListener;
+
+    public interface OnFieldClickListener {
+        void onFieldClick(GetFieldsResponse.FieldItem field);
+    }
 
     public FieldAdapter(List<GetFieldsResponse.FieldItem> fieldList) {
         this.fieldList = fieldList;
         Log.d(TAG, "FieldAdapter created with " + (fieldList != null ? fieldList.size() : 0) + " items");
+    }
+
+    public void setOnFieldClickListener(OnFieldClickListener listener) {
+        this.onFieldClickListener = listener;
     }
 
     @NonNull
@@ -73,6 +82,13 @@ public class FieldAdapter extends RecyclerView.Adapter<FieldAdapter.FieldViewHol
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .centerCrop()
                     .into(holder.stadiumImage);
+
+        // Setup item click listener to view pricing
+        holder.itemView.setOnClickListener(v -> {
+            if (onFieldClickListener != null) {
+                onFieldClickListener.onFieldClick(field);
+            }
+        });
         } else {
             // Set primaryColor background when no image
             holder.stadiumImage.setBackgroundResource(R.color.primaryColor);
