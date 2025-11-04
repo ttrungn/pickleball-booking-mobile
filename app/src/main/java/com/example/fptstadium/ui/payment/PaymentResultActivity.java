@@ -7,6 +7,7 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.content.Intent;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -69,7 +70,13 @@ public class PaymentResultActivity extends AppCompatActivity {
     }
 
     private void setupButtons() {
-        btnDone.setOnClickListener(v -> finish());
+        btnDone.setOnClickListener(v -> {
+            // Redirect to home (MainActivity) and clear the back stack
+            Intent intent = new Intent(this, com.example.fptstadium.MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
+        });
     }
 
     private void populateFromDeeplink(Uri data) {
