@@ -12,6 +12,12 @@ public class TimeSlot {
     @SerializedName("endTime")
     private String endTime;    // Format từ backend: "HH:mm:ss" (TimeOnly)
 
+    @SerializedName("price")
+    private Double price;
+
+    @SerializedName("isAvailable")
+    private boolean isAvailable;
+
     // Getters
     public String getId() {
         return id;
@@ -25,6 +31,14 @@ public class TimeSlot {
         return endTime;
     }
 
+    public Double getPrice() {
+        return price;
+    }
+
+    public boolean isAvailable() {
+        return isAvailable;
+    }
+
     // Setters
     public void setId(String id) {
         this.id = id;
@@ -36,6 +50,14 @@ public class TimeSlot {
 
     public void setEndTime(String endTime) {
         this.endTime = endTime;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    public void setAvailable(boolean available) {
+        isAvailable = available;
     }
 
     // Helper method để format thời gian
@@ -58,4 +80,3 @@ public class TimeSlot {
         return time;
     }
 }
-

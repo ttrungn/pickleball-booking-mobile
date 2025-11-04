@@ -32,9 +32,24 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".ui.booking.MyBookingsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".ui.payment.PaymentExampleActivity"
+            android:exported="false"
+            android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"
+            android:parentActivityName=".ui.booking.BookingActivity" />
+        <activity
             android:name=".ui.auth.RegisterActivity"
             android:exported="false"
             android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar" />
+        <activity
+            android:name=".ui.booking.BookingActivity"
+            android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"
+            android:exported="false"
+            android:parentActivityName=".ui.field.FieldDetailActivity" />
         <activity
             android:name=".ui.pricing.FieldPricingActivity"
             android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"

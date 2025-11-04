@@ -190,7 +190,7 @@ public class FieldDetailActivity extends AppCompatActivity {
         // Price
         if (field.getPricePerHour() != null) {
             String priceText = String.format(java.util.Locale.getDefault(),
-                "%,.0f VND/giờ", field.getPricePerHour());
+                    "%,.0f VND/giờ", field.getPricePerHour());
             fieldPrice.setText(priceText);
         }
 
@@ -211,7 +211,7 @@ public class FieldDetailActivity extends AppCompatActivity {
         // Area
         if (field.getArea() != null) {
             String areaText = String.format(java.util.Locale.getDefault(),
-                "%.0f m²", field.getArea());
+                    "%.0f m²", field.getArea());
             fieldArea.setText(areaText);
         } else {
             fieldArea.setText("N/A");
@@ -244,12 +244,12 @@ public class FieldDetailActivity extends AppCompatActivity {
         // Otherwise, use coordinates if available
         else if (field.getLatitude() != null && field.getLongitude() != null) {
             String geoUri = String.format(java.util.Locale.US,
-                "geo:%f,%f?q=%f,%f(%s)",
-                field.getLatitude(),
-                field.getLongitude(),
-                field.getLatitude(),
-                field.getLongitude(),
-                field.getName());
+                    "geo:%f,%f?q=%f,%f(%s)",
+                    field.getLatitude(),
+                    field.getLongitude(),
+                    field.getLatitude(),
+                    field.getLongitude(),
+                    field.getName());
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
             startActivity(intent);
         } else {
@@ -266,9 +266,12 @@ public class FieldDetailActivity extends AppCompatActivity {
     }
 
     private void bookField(FieldDetailResponse.FieldDetail field) {
-        // TODO: Implement booking functionality
-        Toast.makeText(this, "Đang phát triển tính năng đặt sân cho " + field.getName(),
-            Toast.LENGTH_SHORT).show();
+        // Navigate to BookingActivity
+        Intent intent = new Intent(this, com.example.fptstadium.ui.booking.BookingActivity.class);
+        intent.putExtra(com.example.fptstadium.ui.booking.BookingActivity.EXTRA_FIELD_ID, field.getId());
+        intent.putExtra(com.example.fptstadium.ui.booking.BookingActivity.EXTRA_FIELD_NAME, field.getName());
+        intent.putExtra(com.example.fptstadium.ui.booking.BookingActivity.EXTRA_FIELD_ADDRESS, field.getAddress());
+        intent.putExtra(com.example.fptstadium.ui.booking.BookingActivity.EXTRA_PRICE_PER_HOUR, field.getPricePerHour() != null ? field.getPricePerHour() : 0.0);
+        startActivity(intent);
     }
 }
-

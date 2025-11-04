@@ -35,7 +35,7 @@ public class UserProfileFragment extends Fragment {
     PrefsHelper prefsHelper;
 
     private TextView tvUserName, tvUserEmail;
-    private LinearLayout llChangeProfile, llChangePassword, llAboutUs, llLogout, llTestPayment;
+    private LinearLayout llChangeProfile, llChangePassword, llAboutUs, llLogout, llTestPayment, llMyBookings;
     private AuthViewModel authViewModel;
     private PaymentViewModel paymentViewModel;
     private UserProfileData currentUserData;
@@ -63,6 +63,7 @@ public class UserProfileFragment extends Fragment {
         llAboutUs = view.findViewById(R.id.llAboutUs);
         llLogout = view.findViewById(R.id.llLogout);
         llTestPayment = view.findViewById(R.id.llTestPayment);
+        llMyBookings = view.findViewById(R.id.llMyBookings);
     }
 
     private void initViewModel() {
@@ -89,6 +90,11 @@ public class UserProfileFragment extends Fragment {
         llAboutUs.setOnClickListener(v -> {
             Toast.makeText(getContext(), "About Us clicked", Toast.LENGTH_SHORT).show();
             // TODO: Navigate to about us activity
+        });
+
+        llMyBookings.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), com.example.fptstadium.ui.booking.MyBookingsActivity.class);
+            startActivity(intent);
         });
 
         llLogout.setOnClickListener(v -> {
