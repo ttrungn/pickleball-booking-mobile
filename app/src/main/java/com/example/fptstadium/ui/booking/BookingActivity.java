@@ -4,13 +4,17 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -62,7 +66,6 @@ public class BookingActivity extends AppCompatActivity {
     private TimeSlotAdapter timeSlotAdapter;
 
     // Views
-    private ImageView btnBack;
     private TextView tvFieldName;
     private TextView tvFieldAddress;
     private TextView tvSelectedDate;
@@ -74,6 +77,7 @@ public class BookingActivity extends AppCompatActivity {
     private TextView tvSelectedSlotsCount;
     private TextView tvTotalPrice;
     private MaterialButton btnConfirmBooking;
+    private LinearLayout llBookingWarning;
 
     // Data
     private String fieldId;
@@ -94,6 +98,16 @@ public class BookingActivity extends AppCompatActivity {
         }
 
         setContentView(R.layout.activity_booking);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.booking), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+        // Enable ActionBar with back button
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
 
         // Get data from intent
         fieldId = getIntent().getStringExtra(EXTRA_FIELD_ID);
@@ -117,6 +131,15 @@ public class BookingActivity extends AppCompatActivity {
         tvFieldAddress.setText(fieldAddress != null ? fieldAddress : "");
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     /**
      * Kiểm tra xem user đã login chưa
      * @return true nếu đã login, false nếu chưa
@@ -136,7 +159,6 @@ public class BookingActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        btnBack = findViewById(R.id.btnBack);
         tvFieldName = findViewById(R.id.tvFieldName);
         tvFieldAddress = findViewById(R.id.tvFieldAddress);
         tvSelectedDate = findViewById(R.id.tvSelectedDate);
@@ -148,6 +170,7 @@ public class BookingActivity extends AppCompatActivity {
         tvSelectedSlotsCount = findViewById(R.id.tvSelectedSlotsCount);
         tvTotalPrice = findViewById(R.id.tvTotalPrice);
         btnConfirmBooking = findViewById(R.id.btnConfirmBooking);
+        llBookingWarning = findViewById(R.id.llBookingWarning);
     }
 
     private void setupViewModel() {
@@ -165,7 +188,6 @@ public class BookingActivity extends AppCompatActivity {
     }
 
     private void setupListeners() {
-        btnBack.setOnClickListener(v -> finish());
 
         btnSelectDate.setOnClickListener(v -> showDatePicker());
 
@@ -337,6 +359,7 @@ public class BookingActivity extends AppCompatActivity {
 
         if (count > 0) {
             summaryCard.setVisibility(View.VISIBLE);
+            llBookingWarning.setVisibility(View.VISIBLE);
             btnConfirmBooking.setEnabled(true);
 
             tvSelectedSlotsCount.setText(String.valueOf(count));
@@ -358,6 +381,7 @@ public class BookingActivity extends AppCompatActivity {
             Log.d(TAG, "Selected " + count + " slots, Total: " + totalPrice + " VND");
         } else {
             summaryCard.setVisibility(View.GONE);
+            llBookingWarning.setVisibility(View.GONE);
             btnConfirmBooking.setEnabled(false);
         }
     }
