@@ -34,12 +34,12 @@
         <activity
             android:name=".ui.booking.MyBookingsActivity"
             android:exported="false"
-            android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"
+            android:label="Lịch sử đặt sân"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".ui.payment.PaymentExampleActivity"
             android:exported="false"
-            android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"
+            android:label="Thanh toán"
             android:parentActivityName=".ui.booking.BookingActivity" />
         <activity
             android:name=".ui.auth.RegisterActivity"
@@ -47,7 +47,7 @@
             android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar" />
         <activity
             android:name=".ui.booking.BookingActivity"
-            android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"
+            android:label="Đặt sân"
             android:exported="false"
             android:parentActivityName=".ui.field.FieldDetailActivity" />
         <activity

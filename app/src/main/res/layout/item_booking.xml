@@ -58,18 +58,18 @@
             android:gravity="center_vertical"
             android:layout_marginBottom="12dp">
 
-            <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:src="@android:drawable/ic_menu_my_calendar"
+             <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@drawable/ic_calendar"
                 app:tint="#757575"
-                android:layout_marginEnd="6dp"/>
+                android:layout_marginEnd="8dp"/>
 
             <TextView
                 android:id="@+id/tvBookingDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="13sp"
+                android:textSize="14sp"
                 android:textColor="#757575"
                 tools:text="Ngày đặt: 05/11/2025"/>
         </LinearLayout>
@@ -83,11 +83,11 @@
             android:layout_marginBottom="8dp">
 
             <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:src="@android:drawable/ic_menu_recent_history"
-                app:tint="#424242"
-                android:layout_marginEnd="6dp"/>
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@drawable/ic_calendar"
+                app:tint="#757575"
+                android:layout_marginEnd="8dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -120,7 +120,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:layout_marginBottom="12dp">
 
             <TextView
                 android:layout_width="0dp"
@@ -142,32 +143,46 @@
         </LinearLayout>
 
         <!-- Action Buttons -->
+<LinearLayout
+            android:id="@+id/llWarningNotice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="#FFF3E0"
+            android:padding="12dp"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="12dp"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_info"
+                app:tint="#F57C00"
+                android:layout_marginEnd="8dp"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Lưu ý: Đơn đặt sân sẽ tự động hủy sau 2 phút nếu chưa thanh toán"
+                android:textSize="13sp"
+                android:textColor="#E65100"
+                android:lineSpacingExtra="2dp"/>
+        </LinearLayout>
+
+        <!-- Action Buttons -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="12dp"
             android:gravity="center">
-
-            <!-- Payment Button -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnPayment"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Thanh toán"
-                android:textColor="#FFFFFF"
-                android:layout_marginEnd="8dp"
-                app:cornerRadius="8dp"
-                android:backgroundTint="@color/primaryColor"
-                android:visibility="gone"/>
 
             <!-- Cancel Button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnCancelBooking"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:text="Hủy đặt sân"
                 android:textColor="@color/primaryColor"
                 app:cornerRadius="8dp"

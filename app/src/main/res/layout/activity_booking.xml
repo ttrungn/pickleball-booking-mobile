@@ -4,36 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#F5F5F5">
-
-    <!-- Header -->
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:background="@color/primaryColor"
-        android:elevation="4dp">
-
-        <ImageView
-            android:id="@+id/btnBack"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="8dp"
-            android:src="@drawable/ic_back"
-            android:contentDescription="Quay lại"
-            android:padding="8dp"
-            android:background="?attr/selectableItemBackgroundBorderless"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="Đặt sân"
-            android:textColor="#FFFFFF"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-    </RelativeLayout>
+    android:background="#F5F5F5"
+    android:id="@+id/booking">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -213,7 +185,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Trống"
-                                android:textSize="18sp"
+                                android:textSize="17sp"
                                 android:textColor="#616161"/>
                         </LinearLayout>
 
@@ -232,7 +204,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Đã chọn"
-                                android:textSize="18sp"
+                                android:textSize="17sp"
                                 android:textColor="#616161"/>
                         </LinearLayout>
 
@@ -251,7 +223,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Đã đặt"
-                                android:textSize="18sp"
+                                android:textSize="17sp"
                                 android:textColor="#616161"/>
                         </LinearLayout>
                     </LinearLayout>
@@ -350,7 +322,7 @@
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:src="@android:drawable/ic_menu_agenda"
+                    android:src="@android:drawable/ic_info"
                     app:tint="@color/primaryColor"
                     android:contentDescription="Summary icon"
                     android:layout_marginEnd="8dp"/>
@@ -408,6 +380,36 @@
             </LinearLayout>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
+
+
+    <!-- Warning Notice for Auto-Cancel -->
+    <LinearLayout
+        android:id="@+id/llBookingWarning"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#FFF3E0"
+        android:padding="12dp"
+        android:gravity="center_vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_info"
+            app:tint="#F57C00"
+            android:contentDescription="Warning icon"
+            android:layout_marginEnd="10dp"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Lưu ý: Sau khi xác nhận, bạn có 2 phút để thanh toán. Đơn đặt sân sẽ tự động hủy nếu không thanh toán đúng hạn."
+            android:textSize="15sp"
+            android:textColor="#E65100"
+            android:lineSpacingExtra="2dp"/>
+    </LinearLayout>
 
     <!-- Bottom Button -->
     <com.google.android.material.card.MaterialCardView

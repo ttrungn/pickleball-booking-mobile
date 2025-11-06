@@ -1,4 +1,4 @@
-package com.example.fptstadium.ui.booking;
+package com.example.fptstadium.ui.adapter;
 
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -17,6 +17,8 @@ import com.example.fptstadium.data.model.response.GetBookingResponse;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -27,7 +29,6 @@ public class MyBookingsAdapter extends RecyclerView.Adapter<MyBookingsAdapter.Bo
 
     public interface OnBookingActionListener {
         void onCancelBooking(GetBookingResponse.BookingData booking);
-        void onPaymentBooking(GetBookingResponse.BookingData booking);
     }
 
     public MyBookingsAdapter(OnBookingActionListener listener) {
@@ -65,7 +66,8 @@ public class MyBookingsAdapter extends RecyclerView.Adapter<MyBookingsAdapter.Bo
         private LinearLayout llTimeSlots;
         private TextView tvTotalPrice;
         private Button btnCancelBooking;
-        private Button btnPayment;
+        private LinearLayout llWarningNotice;
+
 
         public BookingViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -75,7 +77,7 @@ public class MyBookingsAdapter extends RecyclerView.Adapter<MyBookingsAdapter.Bo
             llTimeSlots = itemView.findViewById(R.id.llTimeSlots);
             tvTotalPrice = itemView.findViewById(R.id.tvTotalPrice);
             btnCancelBooking = itemView.findViewById(R.id.btnCancelBooking);
-            btnPayment = itemView.findViewById(R.id.btnPayment);
+           llWarningNotice = itemView.findViewById(R.id.llWarningNotice);
         }
 
         public void bind(GetBookingResponse.BookingData booking) {
@@ -94,7 +96,9 @@ public class MyBookingsAdapter extends RecyclerView.Adapter<MyBookingsAdapter.Bo
 
             llTimeSlots.removeAllViews();
             if (booking.getTimeSlots() != null && !booking.getTimeSlots().isEmpty()) {
-                for (TimeSlot slot : booking.getTimeSlots()) {
+                // Sort time slots before displaying
+                List<TimeSlot> sortedTimeSlots = sortTimeSlots(booking.getTimeSlots());
+                for (TimeSlot slot : sortedTimeSlots) {
                     addTimeSlotView(slot);
                 }
             }
@@ -102,25 +106,19 @@ public class MyBookingsAdapter extends RecyclerView.Adapter<MyBookingsAdapter.Bo
             NumberFormat formatter = NumberFormat.getInstance(new Locale("vi", "VN"));
             tvTotalPrice.setText(formatter.format(booking.getTotalPrice()) + " VND");
 
-            // Show buttons based on status
+            // Show warning notice and cancel button for Pending status only
             if ("Pending".equalsIgnoreCase(status)) {
-                // Show both Payment and Cancel buttons for Pending status
-                btnPayment.setVisibility(View.VISIBLE);
-                btnPayment.setOnClickListener(v -> {
-                    if (listener != null) {
-                        listener.onPaymentBooking(booking);
-                    }
-                });
-
+                llWarningNotice.setVisibility(View.VISIBLE);
                 btnCancelBooking.setVisibility(View.VISIBLE);
                 btnCancelBooking.setOnClickListener(v -> {
                     if (listener != null) {
                         listener.onCancelBooking(booking);
                     }
                 });
+
             } else if ("Confirmed".equalsIgnoreCase(status)) {
                 // Only show Cancel button for Confirmed status
-                btnPayment.setVisibility(View.GONE);
+                llWarningNotice.setVisibility(View.GONE);
                 btnCancelBooking.setVisibility(View.VISIBLE);
                 btnCancelBooking.setOnClickListener(v -> {
                     if (listener != null) {
@@ -129,9 +127,30 @@ public class MyBookingsAdapter extends RecyclerView.Adapter<MyBookingsAdapter.Bo
                 });
             } else {
                 // Hide both buttons for other statuses
-                btnPayment.setVisibility(View.GONE);
+                llWarningNotice.setVisibility(View.GONE);
                 btnCancelBooking.setVisibility(View.GONE);
             }
+        }
+
+        /**
+         * Sort time slots by start time
+         */
+        private List<TimeSlot> sortTimeSlots(List<TimeSlot> timeSlots) {
+            List<TimeSlot> sorted = new ArrayList<>(timeSlots);
+            Collections.sort(sorted, new Comparator<TimeSlot>() {
+                @Override
+                public int compare(TimeSlot slot1, TimeSlot slot2) {
+                    String start1 = slot1.getStartTime();
+                    String start2 = slot2.getStartTime();
+
+                    if (start1 == null && start2 == null) return 0;
+                    if (start1 == null) return 1;
+                    if (start2 == null) return -1;
+
+                    return start1.compareTo(start2);
+                }
+            });
+            return sorted;
         }
 
         private void addTimeSlotView(TimeSlot slot) {

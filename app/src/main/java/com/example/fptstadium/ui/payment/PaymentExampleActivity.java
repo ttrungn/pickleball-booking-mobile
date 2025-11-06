@@ -4,9 +4,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -14,6 +14,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.fptstadium.R;
@@ -22,6 +25,8 @@ import com.example.fptstadium.ui.booking.BookingViewModel;
 import com.example.fptstadium.ui.profile.PaymentViewModel;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -39,7 +44,6 @@ public class PaymentExampleActivity extends AppCompatActivity {
     private LinearLayout llTimeSlots;
     private Button btnPayWithMomo;
     private Button btnCancelPayment;
-    private ImageView btnBack;
 
     private String bookingId;
     private long amount;
@@ -51,6 +55,17 @@ public class PaymentExampleActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment_example);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.payment_activity), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+
+        // Enable ActionBar with back button
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
 
         // Get data from intent
         bookingId = getIntent().getStringExtra("BOOKING_ID");
@@ -71,6 +86,15 @@ public class PaymentExampleActivity extends AppCompatActivity {
         displayBookingInfo();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private void initViews() {
         progressBar = findViewById(R.id.progressBar);
         tvAmount = findViewById(R.id.tvAmount);
@@ -79,7 +103,6 @@ public class PaymentExampleActivity extends AppCompatActivity {
         llTimeSlots = findViewById(R.id.llTimeSlots);
         btnPayWithMomo = findViewById(R.id.btnPayWithMomo);
         btnCancelPayment = findViewById(R.id.btnCancelPayment);
-        btnBack = findViewById(R.id.btnBack);
     }
 
     private void setupViewModel() {
@@ -88,8 +111,6 @@ public class PaymentExampleActivity extends AppCompatActivity {
     }
 
     private void setupListeners() {
-        btnBack.setOnClickListener(v -> finish());
-
         btnPayWithMomo.setOnClickListener(v -> {
             Log.d(TAG, "User clicked Pay with MoMo for booking: " + bookingId);
             initiatePayment();
@@ -164,13 +185,36 @@ public class PaymentExampleActivity extends AppCompatActivity {
             tvBookingDate.setText("Ngày đặt: --/--/----");
         }
 
-        // Display time slots
+        // Display time slots - sorted
         llTimeSlots.removeAllViews();
         if (timeSlots != null && timeSlots.size() > 0) {
-            for (String timeSlot : timeSlots) {
+            // Sort time slots before displaying
+            ArrayList<String> sortedTimeSlots = sortTimeSlots(timeSlots);
+            for (String timeSlot : sortedTimeSlots) {
                 addTimeSlotSimple(timeSlot);
             }
         }
+    }
+
+    /**
+     * Sort time slots by start time
+     */
+    private ArrayList<String> sortTimeSlots(ArrayList<String> timeSlots) {
+        ArrayList<String> sorted = new ArrayList<>(timeSlots);
+        Collections.sort(sorted, new Comparator<String>() {
+            @Override
+            public int compare(String slot1, String slot2) {
+                // Extract start time from format "07:00 - 08:00"
+                try {
+                    String start1 = slot1.split(" - ")[0].trim();
+                    String start2 = slot2.split(" - ")[0].trim();
+                    return start1.compareTo(start2);
+                } catch (Exception e) {
+                    return 0;
+                }
+            }
+        });
+        return sorted;
     }
 
     /**
