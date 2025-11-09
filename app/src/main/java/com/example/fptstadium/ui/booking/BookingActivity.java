@@ -427,14 +427,14 @@ public class BookingActivity extends AppCompatActivity {
             timeSlotIds.add(slot.getId());
         }
 
-        // Create booking request với format đúng
-        BookingRequest request = new BookingRequest(fieldId, dateString, timeSlotIds);
+        // Create booking request
+        BookingRequest request = new BookingRequest(fieldId, dateString, timeSlotIds, finalTotalPrice);
 
         progressBar.setVisibility(View.VISIBLE);
         btnConfirmBooking.setEnabled(false);
 
         Log.d(TAG, "Creating booking for field: " + fieldId + ", date: " + dateString +
-              ", timeSlotIds: " + timeSlotIds + ", total: " + finalTotalPrice);
+              ", timeSlotIds: " + timeSlotIds + ", totalPrice: " + finalTotalPrice + " VND");
 
         viewModel.createBooking(request).observe(this, response -> {
             progressBar.setVisibility(View.GONE);
@@ -446,7 +446,7 @@ public class BookingActivity extends AppCompatActivity {
                 // Navigate to payment
                 String bookingId = response.getData();
                 if (bookingId != null && !bookingId.isEmpty()) {
-                    Log.d(TAG, "Booking created successfully with ID: " + bookingId);
+                    Log.d(TAG, "Booking created successfully with ID: " + bookingId + ", Total: " + finalTotalPrice + " VND");
 
                     // Prepare time slots array for payment screen
                     ArrayList<String> timeSlotsList = new ArrayList<>();
