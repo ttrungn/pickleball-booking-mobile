@@ -1,8 +1,10 @@
 package com.example.fptstadium;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -11,6 +13,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.fptstadium.databinding.ActivityMainBinding;
+import com.example.fptstadium.ui.chat.ChatActivity;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -35,6 +38,20 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
+
+        // Setup Chat Button and Floating Action Button
+        setupChatButtons();
+    }
+
+    private void setupChatButtons() {
+        // Setup Floating Action Button only
+        FloatingActionButton fabChat = findViewById(R.id.fabChat);
+        if (fabChat != null) {
+            fabChat.setOnClickListener(v -> {
+                Intent intent = new Intent(MainActivity.this, ChatActivity.class);
+                startActivity(intent);
+            });
+        }
     }
 
 }
