@@ -2,13 +2,18 @@ package com.example.fptstadium.ui.pricing;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,7 +25,6 @@ import com.example.fptstadium.data.model.TimeSlot;
 import com.example.fptstadium.data.model.response.GetPricingsResponse;
 import com.example.fptstadium.data.model.response.GetTimeSlotResponse;
 import com.example.fptstadium.ui.adapter.PricingAdapter;
-import com.google.android.material.appbar.MaterialToolbar;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,12 +52,11 @@ public class FieldPricingActivity extends AppCompatActivity {
     @Inject
     TimeSlotService timeSlotService;
 
-    private MaterialToolbar toolbar;
     private TextView tvFieldName;
     private TextView tvFieldAddress;
     private RecyclerView recyclerViewPricing;
     private ProgressBar loadingIndicator;
-    private TextView tvEmptyState;
+    private LinearLayout tvEmptyState;
     private PricingAdapter adapter;
     
     // Map to store time slots by ID
@@ -67,7 +70,11 @@ public class FieldPricingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_field_pricing);
-
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.pricing), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
         // Get data from intent
         fieldId = getIntent().getStringExtra(EXTRA_FIELD_ID);
         fieldName = getIntent().getStringExtra(EXTRA_FIELD_NAME);
@@ -79,29 +86,34 @@ public class FieldPricingActivity extends AppCompatActivity {
             return;
         }
 
+        // Enable ActionBar with back button
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+            getSupportActionBar().setTitle("Bảng Giá");
+        }
+
         initViews();
-        setupToolbar();
         setupRecyclerView();
         displayFieldInfo();
         loadPricings();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private void initViews() {
-        toolbar = findViewById(R.id.toolbar);
         tvFieldName = findViewById(R.id.tv_field_name);
         tvFieldAddress = findViewById(R.id.tv_field_address);
         recyclerViewPricing = findViewById(R.id.recycler_view_pricing);
         loadingIndicator = findViewById(R.id.loading_indicator);
         tvEmptyState = findViewById(R.id.tv_empty_state);
-    }
-
-    private void setupToolbar() {
-        setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-        }
-        toolbar.setNavigationOnClickListener(v -> finish());
     }
 
     private void setupRecyclerView() {
