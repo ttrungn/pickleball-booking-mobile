@@ -115,7 +115,6 @@ public class MyBookingsActivity extends AppCompatActivity implements MyBookingsA
         btnRetry = findViewById(R.id.btnRetry);
         btnPreviousPage = findViewById(R.id.btnPreviousPage);
         btnNextPage = findViewById(R.id.btnNextPage);
-
         // Filter chips
         chipGroupStatus = findViewById(R.id.chipGroupStatus);
         chipAll = findViewById(R.id.chipAll);
