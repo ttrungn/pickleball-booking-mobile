@@ -192,8 +192,6 @@ public class HomeFragment extends Fragment {
                 binding.recyclerView.setVisibility(View.VISIBLE);
                 adapter.updateFields(fields);
                 binding.recyclerView.scrollToPosition(0);
-
-                Toast.makeText(getContext(), "Loaded " + fields.size() + " fields", Toast.LENGTH_SHORT).show();
             } else {
                 binding.recyclerView.setVisibility(View.GONE);
                 if (fields != null) {

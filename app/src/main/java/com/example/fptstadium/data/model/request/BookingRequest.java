@@ -13,7 +13,7 @@ public class BookingRequest {
 
     @SerializedName("timeSlotIds")
     private List<String> timeSlotIds; // Chỉ gửi array of IDs
-
+    
     @SerializedName("totalPrice")
     private long totalPrice; // Tổng số tiền
 
@@ -23,7 +23,7 @@ public class BookingRequest {
         this.timeSlotIds = timeSlotIds;
         this.totalPrice = 0;
     }
-
+    
     public BookingRequest(String fieldId, String date, List<String> timeSlotIds, long totalPrice) {
         this.fieldId = fieldId;
         this.date = date;
@@ -54,11 +54,11 @@ public class BookingRequest {
     public void setTimeSlotIds(List<String> timeSlotIds) {
         this.timeSlotIds = timeSlotIds;
     }
-
+    
     public long getTotalPrice() {
         return totalPrice;
     }
-
+    
     public void setTotalPrice(long totalPrice) {
         this.totalPrice = totalPrice;
     }

@@ -88,7 +88,7 @@ public class LoginActivity extends AppCompatActivity {
                 btnSignIn.setEnabled(true);
 
                 if (loginResponse != null && loginResponse.isSuccess()) {
-                    Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Login successfully", Toast.LENGTH_SHORT).show();
 
                     // Test Firebase Realtime Database - Send simple data
                     sendTestDataToFirebase(email);

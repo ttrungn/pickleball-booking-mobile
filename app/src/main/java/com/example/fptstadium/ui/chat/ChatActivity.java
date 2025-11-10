@@ -211,7 +211,7 @@ public class ChatActivity extends AppCompatActivity {
                         etMessageInput.setText("");
                         // Update chat room's last message info
                         updateLastMessage(messageText, timestamp);
-                        Toast.makeText(ChatActivity.this, "Message sent ✓", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ChatActivity.this, "Message sent success", Toast.LENGTH_SHORT).show();
                     })
                     .addOnFailureListener(e -> {
                         Toast.makeText(ChatActivity.this, "Failed to send message: " + e.getMessage(), Toast.LENGTH_SHORT).show();
