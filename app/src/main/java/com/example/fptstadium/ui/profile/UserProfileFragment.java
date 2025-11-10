@@ -138,11 +138,29 @@ public class UserProfileFragment extends Fragment {
                 currentUserData = response.getData();
                 tvUserName.setText(currentUserData.getFirstName() + " " + currentUserData.getLastName());
                 tvUserEmail.setText(currentUserData.getEmail());
+                
+                // Save user info to PrefsHelper for chat functionality
+                saveUserInfoToPrefs(currentUserData);
             } else {
                 tvUserName.setText("User Name");
                 tvUserEmail.setText("user@email.com");
             }
         });
+    }
+
+    private void saveUserInfoToPrefs(UserProfileData userData) {
+        if (userData.getId() != null) {
+            prefsHelper.saveUserId(userData.getId());
+        }
+        
+        String fullName = (userData.getFirstName() != null ? userData.getFirstName() : "") + 
+                         " " + 
+                         (userData.getLastName() != null ? userData.getLastName() : "");
+        prefsHelper.saveUserName(fullName.trim());
+        
+        if (userData.getEmail() != null) {
+            prefsHelper.saveUserEmail(userData.getEmail());
+        }
     }
 
     @Override

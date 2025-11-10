@@ -3,6 +3,9 @@ package com.example.fptstadium.data.model.response;
 import com.google.gson.annotations.SerializedName;
 
 public class UserProfileData {
+    @SerializedName("id")
+    private String id;
+
     @SerializedName("userName")
     private String userName;
 
@@ -17,6 +20,14 @@ public class UserProfileData {
 
     @SerializedName("lastName")
     private String lastName;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getUserName() {
         return userName;

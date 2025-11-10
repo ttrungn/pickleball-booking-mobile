@@ -1,32 +1,34 @@
 package com.example.fptstadium.data.model;
 
 public class Message {
-    private String messageId;
+    private String id;
     private String senderId;
     private String senderName;
-    private String messageText;
+    private String senderRole; // "admin" or "customer"
+    private String message;
     private long timestamp;
-    private String type; // "text", "image", etc.
+    private boolean read;
 
     // Default constructor for Firebase
     public Message() {
     }
 
-    public Message(String senderId, String senderName, String messageText, long timestamp) {
+    public Message(String senderId, String senderName, String senderRole, String message, long timestamp) {
         this.senderId = senderId;
         this.senderName = senderName;
-        this.messageText = messageText;
+        this.senderRole = senderRole;
+        this.message = message;
         this.timestamp = timestamp;
-        this.type = "text";
+        this.read = false;
     }
 
     // Getters and Setters
-    public String getMessageId() {
-        return messageId;
+    public String getId() {
+        return id;
     }
 
-    public void setMessageId(String messageId) {
-        this.messageId = messageId;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getSenderId() {
@@ -45,12 +47,20 @@ public class Message {
         this.senderName = senderName;
     }
 
-    public String getMessageText() {
-        return messageText;
+    public String getSenderRole() {
+        return senderRole;
     }
 
-    public void setMessageText(String messageText) {
-        this.messageText = messageText;
+    public void setSenderRole(String senderRole) {
+        this.senderRole = senderRole;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public long getTimestamp() {
@@ -61,11 +71,32 @@ public class Message {
         this.timestamp = timestamp;
     }
 
-    public String getType() {
-        return type;
+    public boolean isRead() {
+        return read;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setRead(boolean read) {
+        this.read = read;
+    }
+
+    // Backward compatibility methods
+    @Deprecated
+    public String getMessageId() {
+        return id;
+    }
+
+    @Deprecated
+    public void setMessageId(String messageId) {
+        this.id = messageId;
+    }
+
+    @Deprecated
+    public String getMessageText() {
+        return message;
+    }
+
+    @Deprecated
+    public void setMessageText(String messageText) {
+        this.message = messageText;
     }
 }

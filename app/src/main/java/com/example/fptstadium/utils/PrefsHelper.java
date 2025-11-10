@@ -15,6 +15,9 @@ public class PrefsHelper {
     private static final String KEY_REFRESH_TOKEN = "refresh_token";
     private static final String KEY_ACCESS_TOKEN_EXPIRES_AT = "access_token_expires_at";
     private static final String KEY_REFRESH_TOKEN_EXPIRES_AT = "refresh_token_expires_at";
+    private static final String KEY_USER_ID = "user_id";
+    private static final String KEY_USER_NAME = "user_name";
+    private static final String KEY_USER_EMAIL = "user_email";
 
     private final SharedPreferences prefs;
 
@@ -77,5 +80,43 @@ public class PrefsHelper {
                 .remove(KEY_ACCESS_TOKEN_EXPIRES_AT)
                 .remove(KEY_REFRESH_TOKEN_EXPIRES_AT)
                 .apply();
+    }
+
+    // User info methods
+    public void saveUserId(String userId) {
+        prefs.edit().putString(KEY_USER_ID, userId).apply();
+    }
+
+    public String getUserId() {
+        return prefs.getString(KEY_USER_ID, null);
+    }
+
+    public void saveUserName(String userName) {
+        prefs.edit().putString(KEY_USER_NAME, userName).apply();
+    }
+
+    public String getUserName() {
+        return prefs.getString(KEY_USER_NAME, null);
+    }
+
+    public void saveUserEmail(String userEmail) {
+        prefs.edit().putString(KEY_USER_EMAIL, userEmail).apply();
+    }
+
+    public String getUserEmail() {
+        return prefs.getString(KEY_USER_EMAIL, null);
+    }
+
+    public void clearUserInfo() {
+        prefs.edit()
+                .remove(KEY_USER_ID)
+                .remove(KEY_USER_NAME)
+                .remove(KEY_USER_EMAIL)
+                .apply();
+    }
+
+    public void clearAll() {
+        clearAllTokens();
+        clearUserInfo();
     }
 }

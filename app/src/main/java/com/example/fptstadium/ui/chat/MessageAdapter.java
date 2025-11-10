@@ -76,14 +76,53 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         }
 
         public void bind(Message message) {
-            tvMessageText.setText(message.getMessageText());
-            tvSenderName.setText(message.getSenderName());
+            // Use new getMessage() method instead of deprecated getMessageText()
+            String messageText = message.getMessage();
+            if (messageText != null) {
+                tvMessageText.setText(messageText);
+            } else {
+                // Fallback for backward compatibility
+                tvMessageText.setText(message.getMessageText());
+            }
+            
+            // Set sender name, handle null
+            if (message.getSenderName() != null && !message.getSenderName().isEmpty()) {
+                String displayName = message.getSenderName();
+                // Add role indicator if available
+                if (message.getSenderRole() != null) {
+                    if (message.getSenderRole().equals("admin")) {
+                        displayName += " (Admin)";
+                    }
+                }
+                tvSenderName.setText(displayName);
+            } else {
+                tvSenderName.setText("Unknown");
+            }
+            
+            // Set timestamp with proper validation
             tvTimestamp.setText(formatTimestamp(message.getTimestamp()));
         }
 
         private String formatTimestamp(long timestamp) {
-            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
-            return sdf.format(new Date(timestamp));
+            // Check if timestamp is valid (not 0 or negative)
+            if (timestamp <= 0) {
+                return "Just now";
+            }
+            
+            try {
+                // Check if timestamp is in seconds (older data) vs milliseconds
+                // Timestamps before year 2001 in milliseconds are likely in seconds
+                long actualTimestamp = timestamp;
+                if (timestamp < 1000000000000L) {
+                    // This is likely in seconds, convert to milliseconds
+                    actualTimestamp = timestamp * 1000;
+                }
+                
+                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
+                return sdf.format(new Date(actualTimestamp));
+            } catch (Exception e) {
+                return "Just now";
+            }
         }
     }
 }

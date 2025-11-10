@@ -31,16 +31,47 @@
         app:navGraph="@navigation/mobile_navigation" />
 
     <!-- Floating Action Button for Chat -->
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabChat"
+    <FrameLayout
+        android:id="@+id/fabChatContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="80dp"
-        android:contentDescription="Open chat"
-        android:src="@drawable/ic_chat"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/nav_view"
         app:layout_constraintEnd_toEndOf="parent"
-        app:tint="@color/white" />
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="24dp"
+        android:clipToPadding="false"
+        android:clipChildren="false">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabChat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="Open chat"
+            android:src="@drawable/ic_chat"
+            app:tint="@color/white" />
+
+        <!-- Unread message badge -->
+        <TextView
+            android:id="@+id/badgeChatCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/badge_background"
+            android:text="0"
+            android:textColor="@android:color/white"
+            android:textSize="10sp"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:gravity="center"
+            android:visibility="gone"
+            android:minWidth="18dp"
+            android:minHeight="18dp"
+            android:layout_gravity="end|top"
+            android:layout_marginEnd="2dp"
+            android:layout_marginTop="2dp"
+            android:translationX="-4dp"
+            android:translationY="0dp"
+            android:elevation="8dp" />
+
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
