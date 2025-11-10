@@ -7,6 +7,7 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.content.Intent;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +17,8 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.fptstadium.R;
 import com.example.fptstadium.data.model.request.MomoPaymentCallbackRequest;
+import com.example.fptstadium.utils.NotificationHelper;
+import com.example.fptstadium.utils.PermissionHelper;
 
 import androidx.lifecycle.ViewModelProvider;
 
@@ -45,19 +48,36 @@ public class PaymentResultActivity extends AppCompatActivity {
 
         bindViews();
         viewModel = new ViewModelProvider(this).get(PaymentResultViewModel.class);
+
+        // Request notification permission (cho Android 13+)
+        requestNotificationPermissionIfNeeded();
+
         Uri data = getIntent().getData();
         logDeeplink("onCreate", data);
         populateFromDeeplink(data);
         setupButtons();
     }
 
+    /**
+     * Request notification permission cho Android 13+
+     */
+    private void requestNotificationPermissionIfNeeded() {
+        if (!PermissionHelper.hasNotificationPermission(this)) {
+            PermissionHelper.requestNotificationPermission(this);
+        }
+    }
+
     @Override
-    protected void onNewIntent(android.content.Intent intent) {
-        super.onNewIntent(intent);
-        setIntent(intent);
-        Uri data = intent.getData();
-        logDeeplink("onNewIntent", data);
-        populateFromDeeplink(data);
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == PermissionHelper.NOTIFICATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                Log.d(TAG, "Notification permission granted");
+            } else {
+                Log.d(TAG, "Notification permission denied");
+            }
+        }
     }
 
     private void bindViews() {
@@ -69,7 +89,13 @@ public class PaymentResultActivity extends AppCompatActivity {
     }
 
     private void setupButtons() {
-        btnDone.setOnClickListener(v -> finish());
+        btnDone.setOnClickListener(v -> {
+            // Redirect to home (MainActivity) and clear the back stack
+            Intent intent = new Intent(this, com.example.fptstadium.MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
+        });
     }
 
     private void populateFromDeeplink(Uri data) {
@@ -122,6 +148,10 @@ public class PaymentResultActivity extends AppCompatActivity {
         // Submit payment to backend only when succeeded and avoid duplicate posts by orderId
         if (isSuccess && orderId != null && !orderId.equals(lastPostedOrderId)) {
             lastPostedOrderId = orderId;
+
+            // Hiển thị notification khi thanh toán thành công
+            showPaymentSuccessNotification(orderId, amount);
+
             try {
                 MomoPaymentCallbackRequest req = new MomoPaymentCallbackRequest(
                         partnerCode,
@@ -144,6 +174,41 @@ public class PaymentResultActivity extends AppCompatActivity {
             } catch (Exception e) {
                 Log.w(TAG, "Failed to build/submit momo callback: " + e.getMessage());
             }
+        }
+    }
+
+    /**
+     * Hiển thị notification khi thanh toán thành công
+     */
+    private void showPaymentSuccessNotification(String orderId, String amount) {
+        // Chỉ hiển thị notification nếu có permission
+        if (PermissionHelper.hasNotificationPermission(this)) {
+            String title = "Thanh toán thành công";
+            String message = "Đơn đặt sân của bạn đã được thanh toán thành công. Số tiền thanh toán: " + formatCurrency(amount);
+
+            try {
+                // Extract booking ID from orderId nếu có
+                int bookingId = 0;
+                if (orderId != null && orderId.contains("_")) {
+                    String[] parts = orderId.split("_");
+                    if (parts.length > 0) {
+                        bookingId = Integer.parseInt(parts[0]);
+                    }
+                }
+
+                NotificationHelper.showPaymentSuccessNotification(
+                        this,
+                        title,
+                        message,
+                        bookingId
+                );
+
+                Log.d(TAG, "Payment success notification shown");
+            } catch (Exception e) {
+                Log.e(TAG, "Error showing notification: " + e.getMessage());
+            }
+        } else {
+            Log.d(TAG, "No notification permission, skipping notification");
         }
     }
 

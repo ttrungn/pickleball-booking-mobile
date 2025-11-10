@@ -127,11 +127,9 @@ public class LoginActivity extends AppCompatActivity {
             String timestamp = String.valueOf(System.currentTimeMillis());
             databaseReference.child("test_logins").child(timestamp).setValue(testData)
                     .addOnSuccessListener(aVoid -> {
-                        Toast.makeText(LoginActivity.this, "Test data sent to Firebase ✓", Toast.LENGTH_SHORT).show();
                         System.out.println("✓ Firebase Test: Data sent successfully at path: /test_logins/" + timestamp);
                     })
                     .addOnFailureListener(e -> {
-                        Toast.makeText(LoginActivity.this, "Failed to send test data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                         System.out.println("✗ Firebase Test Error: " + e.getMessage());
                     });
 

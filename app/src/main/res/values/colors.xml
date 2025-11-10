@@ -10,4 +10,14 @@
     <color name="gray">#9E9E9E</color>
     <color name="primaryColor">#27391C</color>
     <color name="secondaryColor">#255F38</color>
+
+    <!-- Booking slot colors -->
+    <color name="slot_available">#E8F5E9</color>
+    <color name="slot_selected">#4CAF50</color>
+    <color name="slot_booked">#BDBDBD</color>
+    <color name="slot_locked">#9E9E9E</color>
+
+    <!-- Warning colors -->
+    <color name="warningBackground">#FFF3E0</color>
+    <color name="warningText">#F57C00</color>
 </resources>

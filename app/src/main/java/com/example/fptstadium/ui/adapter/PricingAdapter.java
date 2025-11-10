@@ -37,24 +37,44 @@ public class PricingAdapter extends RecyclerView.Adapter<PricingAdapter.PricingV
     public void onBindViewHolder(@NonNull PricingViewHolder holder, int position) {
         Pricing pricing = pricingList.get(position);
 
-        // Set day of week
         holder.tvDayOfWeek.setText(pricing.getDayOfWeekName());
-
-        // Set price
         holder.tvPrice.setText(pricing.getFormattedPrice());
 
-        // Get and display time slot info
-        String timeSlotId = pricing.getTimeSlotId();
-        if (timeSlotId != null && timeSlotMap.containsKey(timeSlotId)) {
-            TimeSlot timeSlot = timeSlotMap.get(timeSlotId);
-            if (timeSlot != null) {
-                holder.tvTimeSlotId.setText(timeSlot.getFormattedTimeRange());
+        String loading = holder.itemView.getContext().getString(R.string.pricing_loading);
+        String prefix = holder.itemView.getContext().getString(R.string.pricing_range_prefix);
+
+        // Time slot range (either direct or from map)
+        String timeRange = pricing.getTimeSlotStartTime() != null && pricing.getTimeSlotEndTime() != null
+                ? formatTime(pricing.getTimeSlotStartTime()) + " - " + formatTime(pricing.getTimeSlotEndTime())
+                : pricing.getFormattedTimeRangeOrNull();
+
+        if (timeRange == null) {
+            String timeSlotId = pricing.getTimeSlotId();
+            if (timeSlotId != null && timeSlotMap.containsKey(timeSlotId)) {
+                TimeSlot ts = timeSlotMap.get(timeSlotId);
+                timeRange = ts != null ? ts.getFormattedTimeRange() : null;
+            }
+        }
+        holder.tvTimeSlotId.setText(timeRange != null ? timeRange : loading);
+
+        // Pricing batch range (RangeStartTime/RangeEndTime) if exists and different
+        if (pricing.getRangeStartTime() != null && pricing.getRangeEndTime() != null) {
+            String batchRange = formatTime(pricing.getRangeStartTime()) + " - " + formatTime(pricing.getRangeEndTime());
+            if (batchRange.equals(timeRange)) {
+                holder.tvPricingRange.setVisibility(View.GONE);
             } else {
-                holder.tvTimeSlotId.setText("Time Slot: " + timeSlotId);
+                holder.tvPricingRange.setVisibility(View.VISIBLE);
+                holder.tvPricingRange.setText(prefix + " " + batchRange);
             }
         } else {
-            holder.tvTimeSlotId.setText("Đang tải...");
+            holder.tvPricingRange.setVisibility(View.GONE);
         }
+    }
+
+    private String formatTime(String t) {
+        if (t == null) return "";
+        if (t.length() > 5 && t.charAt(5) == ':') return t.substring(0,5);
+        return t;
     }
 
     @Override
@@ -71,13 +91,14 @@ public class PricingAdapter extends RecyclerView.Adapter<PricingAdapter.PricingV
         TextView tvDayOfWeek;
         TextView tvPrice;
         TextView tvTimeSlotId;
+        TextView tvPricingRange; // new
 
         public PricingViewHolder(@NonNull View itemView) {
             super(itemView);
             tvDayOfWeek = itemView.findViewById(R.id.tv_day_of_week);
             tvPrice = itemView.findViewById(R.id.tv_price);
             tvTimeSlotId = itemView.findViewById(R.id.tv_time_slot_id);
+            tvPricingRange = itemView.findViewById(R.id.tv_pricing_range);
         }
     }
 }
-

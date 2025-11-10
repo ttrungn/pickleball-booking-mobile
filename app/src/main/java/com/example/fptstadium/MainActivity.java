@@ -2,6 +2,7 @@ package com.example.fptstadium;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -27,11 +28,12 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = "MainActivity";
     private ActivityMainBinding binding;
-    
+
     @Inject
     PrefsHelper prefsHelper;
-    
+
     private AuthViewModel authViewModel;
     private com.google.firebase.database.DatabaseReference messagesRef;
     private com.google.firebase.database.ValueEventListener unreadListener;
@@ -51,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Initialize ViewModel
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
-        
+
         // Preload user profile for chat functionality
         preloadUserProfile();
 
@@ -66,6 +68,9 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupWithNavController(binding.navView, navController);
 
+        // Xử lý khi mở từ notification
+//        handleNotificationIntent(getIntent());
+
         // Setup Chat Button and Floating Action Button
         setupChatButtons();
         setupUnreadBadge();
@@ -76,17 +81,17 @@ public class MainActivity extends AppCompatActivity {
         authViewModel.getUserProfile().observe(this, response -> {
             if (response != null && response.isSuccess() && response.getData() != null) {
                 var userData = response.getData();
-                
+
                 // Save to PrefsHelper for chat
                 if (userData.getId() != null) {
                     prefsHelper.saveUserId(userData.getId());
                 }
-                
-                String fullName = (userData.getFirstName() != null ? userData.getFirstName() : "") + 
-                                 " " + 
+
+                String fullName = (userData.getFirstName() != null ? userData.getFirstName() : "") +
+                                 " " +
                                  (userData.getLastName() != null ? userData.getLastName() : "");
                 prefsHelper.saveUserName(fullName.trim());
-                
+
                 if (userData.getEmail() != null) {
                     prefsHelper.saveUserEmail(userData.getEmail());
                 }
@@ -163,4 +168,34 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+//        handleNotificationIntent(intent);
+    }
+
+    /**
+     * Xử lý intent từ notification
+     * Nếu có flag open_my_bookings = true, mở tab My Bookings
+     */
+//    private void handleNotificationIntent(Intent intent) {
+//        if (intent != null) {
+//            boolean openMyBookings = intent.getBooleanExtra("open_my_bookings", false);
+//            int bookingId = intent.getIntExtra("booking_id", 0);
+//
+//            if (openMyBookings) {
+//                Log.d(TAG, "Opening from notification, bookingId: " + bookingId);
+//
+//                // Navigate to dashboard/notifications tab
+//                // Thay đổi navigation_notifications thành ID phù hợp với tab My Bookings của bạn
+//                NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
+//                navController.navigate(R.id.navigation_notifications);
+//
+//                // Clear intent extras để tránh xử lý lại khi rotate screen
+//                intent.removeExtra("open_my_bookings");
+//                intent.removeExtra("booking_id");
+//            }
+//        }
+//    }
 }

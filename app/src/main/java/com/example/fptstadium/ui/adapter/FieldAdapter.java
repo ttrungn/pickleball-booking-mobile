@@ -96,8 +96,13 @@ public class FieldAdapter extends RecyclerView.Adapter<FieldAdapter.FieldViewHol
 
         // Setup book button click listener
         holder.bookButton.setOnClickListener(v -> {
-            String bookingMessage = "Đang đặt sân " + field.getName();
-            Toast.makeText(v.getContext(), bookingMessage, Toast.LENGTH_SHORT).show();
+            // Chuyển đến màn hình đặt sân
+            Intent intent = new Intent(v.getContext(), com.example.fptstadium.ui.booking.BookingActivity.class);
+            intent.putExtra(com.example.fptstadium.ui.booking.BookingActivity.EXTRA_FIELD_ID, field.getId());
+            intent.putExtra(com.example.fptstadium.ui.booking.BookingActivity.EXTRA_FIELD_NAME, field.getName());
+            intent.putExtra(com.example.fptstadium.ui.booking.BookingActivity.EXTRA_FIELD_ADDRESS, field.getAddress());
+            intent.putExtra(com.example.fptstadium.ui.booking.BookingActivity.EXTRA_PRICE_PER_HOUR, field.getPricePerHour());
+            v.getContext().startActivity(intent);
         });
 
         // Setup item click to open detail

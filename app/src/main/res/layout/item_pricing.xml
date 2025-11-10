@@ -22,14 +22,26 @@
             android:textStyle="bold"
             android:textColor="@android:color/black" />
 
+        <!-- Time slot actual ca (Start-End của TimeSlot) -->
         <TextView
             android:id="@+id/tv_time_slot_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="Time Slot: 123"
+            android:text="08:00 - 09:00"
             android:textSize="14sp"
             android:textColor="@android:color/darker_gray" />
+
+        <!-- Pricing range (batch range) if khác với ca time slot -->
+        <TextView
+            android:id="@+id/tv_pricing_range"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="@string/pricing_range_prefix"
+            android:textSize="12sp"
+            android:textColor="@android:color/holo_blue_dark"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/tv_price"
@@ -44,4 +56,3 @@
     </LinearLayout>
 
 </com.google.android.material.card.MaterialCardView>
-

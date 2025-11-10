@@ -22,7 +22,11 @@ import com.example.fptstadium.databinding.FragmentHomeBinding;
 import com.example.fptstadium.ui.adapter.FieldAdapter;
 import com.example.fptstadium.ui.pricing.FieldPricingActivity;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -50,6 +54,9 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
 
+        // Set current date
+        setCurrentDate();
+
         setupRecyclerView();
         setupPagination();
         setupSearchAndFilter(); // Setup search and filter
@@ -60,6 +67,26 @@ public class HomeFragment extends Fragment {
         Log.d(TAG, "Initial loadFields() called in onCreateView");
 
         return binding.getRoot();
+    }
+
+    private void setCurrentDate() {
+        try {
+            Calendar calendar = Calendar.getInstance();
+            Date currentDate = calendar.getTime();
+
+            // Format: "Thứ Hai, 09/11/2025"
+            SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE, dd/MM/yyyy", new Locale("vi", "VN"));
+            String formattedDate = dateFormat.format(currentDate);
+
+            // Capitalize first letter of day name
+            formattedDate = formattedDate.substring(0, 1).toUpperCase() + formattedDate.substring(1);
+
+            binding.textDate.setText(formattedDate);
+            Log.d(TAG, "Current date set: " + formattedDate);
+        } catch (Exception e) {
+            Log.e(TAG, "Error setting current date", e);
+            binding.textDate.setText("Hôm nay");
+        }
     }
 
     @Override

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -11,7 +12,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -19,7 +22,6 @@ import com.example.fptstadium.R;
 import com.example.fptstadium.api.FieldService;
 import com.example.fptstadium.data.model.response.FieldDetailResponse;
 import com.example.fptstadium.ui.pricing.FieldPricingActivity;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.button.MaterialButton;
 
 import javax.inject.Inject;
@@ -51,7 +53,6 @@ public class FieldDetailActivity extends AppCompatActivity {
     private MaterialButton viewPricingButton;
     private MaterialButton bookFieldButton;
     private ProgressBar progressBar;
-    private CollapsingToolbarLayout collapsingToolbar;
 
     private String fieldId;
     private FieldDetailResponse.FieldDetail currentField;
@@ -60,7 +61,11 @@ public class FieldDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_field_detail);
-
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.field_detail_layout), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
         // Get field ID from intent
         fieldId = getIntent().getStringExtra(EXTRA_FIELD_ID);
         if (fieldId == null || fieldId.isEmpty()) {
@@ -69,14 +74,27 @@ public class FieldDetailActivity extends AppCompatActivity {
             return;
         }
 
+        // Enable ActionBar with back button
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+            getSupportActionBar().setTitle("Chi tiết sân");
+        }
+
         initViews();
-        setupToolbar();
         loadFieldDetail();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private void initViews() {
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        collapsingToolbar = findViewById(R.id.collapsing_toolbar);
         fieldMainImage = findViewById(R.id.field_main_image);
         fieldBlueprintImage = findViewById(R.id.field_blueprint_image);
         fieldName = findViewById(R.id.field_name);
@@ -90,23 +108,6 @@ public class FieldDetailActivity extends AppCompatActivity {
         viewPricingButton = findViewById(R.id.view_pricing_button);
         bookFieldButton = findViewById(R.id.book_field_button);
         progressBar = findViewById(R.id.progress_bar);
-
-        setSupportActionBar(toolbar);
-
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-        }
-
-        toolbar.setNavigationOnClickListener(v -> finish());
-
-        // Set CollapsingToolbar color to primaryColor instead of purple
-        collapsingToolbar.setContentScrimColor(getResources().getColor(R.color.primaryColor));
-        collapsingToolbar.setStatusBarScrimColor(getResources().getColor(R.color.primaryColor));
-    }
-
-    private void setupToolbar() {
-        // Toolbar setup is now done in initViews
     }
 
     private void loadFieldDetail() {
@@ -140,8 +141,10 @@ public class FieldDetailActivity extends AppCompatActivity {
     }
 
     private void displayFieldDetail(FieldDetailResponse.FieldDetail field) {
-        // Set toolbar title
-        collapsingToolbar.setTitle(field.getName());
+        // Set action bar title with field name
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(field.getName());
+        }
 
         // Load main image
         String mainImageUrl = field.getImageUrl();
@@ -190,7 +193,7 @@ public class FieldDetailActivity extends AppCompatActivity {
         // Price
         if (field.getPricePerHour() != null) {
             String priceText = String.format(java.util.Locale.getDefault(),
-                "%,.0f VND/giờ", field.getPricePerHour());
+                    "%,.0f VND/giờ", field.getPricePerHour());
             fieldPrice.setText(priceText);
         }
 
@@ -211,7 +214,7 @@ public class FieldDetailActivity extends AppCompatActivity {
         // Area
         if (field.getArea() != null) {
             String areaText = String.format(java.util.Locale.getDefault(),
-                "%.0f m²", field.getArea());
+                    "%.0f m²", field.getArea());
             fieldArea.setText(areaText);
         } else {
             fieldArea.setText("N/A");
@@ -244,12 +247,12 @@ public class FieldDetailActivity extends AppCompatActivity {
         // Otherwise, use coordinates if available
         else if (field.getLatitude() != null && field.getLongitude() != null) {
             String geoUri = String.format(java.util.Locale.US,
-                "geo:%f,%f?q=%f,%f(%s)",
-                field.getLatitude(),
-                field.getLongitude(),
-                field.getLatitude(),
-                field.getLongitude(),
-                field.getName());
+                    "geo:%f,%f?q=%f,%f(%s)",
+                    field.getLatitude(),
+                    field.getLongitude(),
+                    field.getLatitude(),
+                    field.getLongitude(),
+                    field.getName());
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
             startActivity(intent);
         } else {
@@ -266,9 +269,12 @@ public class FieldDetailActivity extends AppCompatActivity {
     }
 
     private void bookField(FieldDetailResponse.FieldDetail field) {
-        // TODO: Implement booking functionality
-        Toast.makeText(this, "Đang phát triển tính năng đặt sân cho " + field.getName(),
-            Toast.LENGTH_SHORT).show();
+        // Navigate to BookingActivity
+        Intent intent = new Intent(this, com.example.fptstadium.ui.booking.BookingActivity.class);
+        intent.putExtra(com.example.fptstadium.ui.booking.BookingActivity.EXTRA_FIELD_ID, field.getId());
+        intent.putExtra(com.example.fptstadium.ui.booking.BookingActivity.EXTRA_FIELD_NAME, field.getName());
+        intent.putExtra(com.example.fptstadium.ui.booking.BookingActivity.EXTRA_FIELD_ADDRESS, field.getAddress());
+        intent.putExtra(com.example.fptstadium.ui.booking.BookingActivity.EXTRA_PRICE_PER_HOUR, field.getPricePerHour() != null ? field.getPricePerHour() : 0.0);
+        startActivity(intent);
     }
 }
-
